@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from code.Const import ENTITY_SPEED, ENTITY_SHOT_DELAY
+import random
+from code.Const import ENTITY_SPEED, ENTITY_SHOT_DELAY, WIN_HEIGHT
 from code.EnemyShot import EnemyShot
 from code.Entity import Entity
 
@@ -9,8 +10,21 @@ class Enemy(Entity):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+        self.directionY = random.choice(('top', 'bottom'))
 
     def move(self):
+        if(self.name == 'Enemy3'):
+            if(self.directionY == 'bottom'):
+                if((self.rect.y + self.surf.get_height()) >= WIN_HEIGHT):
+                    self.directionY = 'top'
+                else:
+                    self.rect.y += ENTITY_SPEED[self.name] * 2
+            else:
+                if(self.rect.y <= 0):
+                    self.directionY = 'bottom'
+                else:
+                    self.rect.y -= ENTITY_SPEED[self.name]
+
         self.rect.centerx -= ENTITY_SPEED[self.name]
 
     def shoot(self):
